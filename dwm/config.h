@@ -24,8 +24,10 @@ static const char *tags[] = { "", "", "", "" /*, "5", "6", "7", "8",
 static const Rule rules[] = {
 	/* xprop(1): WM_CLASS(STRING) = instance, class WM_NAME(STRING) = title */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "firefox",  NULL,       NULL,       1 << 1,       0,           -1 },
-	{ "Alacritty",NULL,       NULL,       1,            0,           -1 },
+	{ "firefox",         NULL,       NULL,       1 << 1,       0,           -1 },
+	{ "Alacritty",	     NULL,       NULL,       1,            0,           -1 },
+	{ "obsidian",	     NULL,       NULL,       1 << 2,       0,           -1 },
+	{ "Telegram",	     NULL,       NULL,       1 << 3,       0,           -1 },
 };
 
 /* layout(s) */
