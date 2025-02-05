@@ -1,0 +1,9 @@
+serverAddr = "127.0.0.1"
+serverPort = 7000
+
+[[proxies]]
+name = "frp-udp"
+type = "udp"
+localIP = "127.0.0.1"
+localPort = 5000 
+remotePort = 6000
