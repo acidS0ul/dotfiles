@@ -23,6 +23,7 @@ pacman = [
     "redshift",
     "github-cli",
     "libnetfilter_queue",
+    "unzip",
 ]
 
 aur = [
