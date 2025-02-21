@@ -13,7 +13,7 @@ FROMTO =  [
     [DOTFILES_PATH + "/redshift",                  ""],   
     [DOTFILES_PATH + "/scripts/getlocale.sh",      "~/.getlocale.sh"],   
     [DOTFILES_PATH + "/dwm/xinitrc",               "~/.xinitrc"],
-    [DOTFILES_PATH + "../nvimrc",                  ""],
+    [DOTFILES_PATH + "../nvimrc",                  "~/.config/nvim"],
     
 ]
 
@@ -23,12 +23,13 @@ def _run(cmd)->NoReturn:
 
 
 def keyboard_setup()->NoReturn:
-    cmd = ["localectl", "set-x11-keymap", "--no-convert", "us,ru", "pc105",
-           "\"\"", "grp:win_space_toggle"]
+    cmd = ["setxkbmap", "-model", "pc105", "-layout" "us,ru", "-option",
+           "grp:win_space_toggle"]   
+
     subprocess.run(cmd)
 
 def install_pacman_packages() -> NoReturn:
-    cmd = ["sudo", "pacman", "-S"]
+    cmd = ["sudo", "pacman", "-Suy"]
     cmd = cmd + packages.pacman
     subprocess.run(cmd)
 
@@ -38,11 +39,11 @@ def install_aur()->NoReturn:
 # def install_aur_packages()->NoReturn:
 
 def git_clone_repos()->NoReturn:
-    nvimrc_clone = ["gh", "repo", "clone" "acidS0ul/nvimrc"]
-    subprocess.run(nvimrc_clone, cwd=DOTFILES_PATH+"/..")
-
     git_cmd = ["git", "clone"]
-    for rep in packages.git_repos: 
+    for repos in packages.git_repos:
+        rep = []
+        rep.append(os.path.expanduser(repos[0]))
+        rep.append(os.path.expanduser(repos[1]))
         subprocess.run(git_cmd + rep)
 
 def zapret_install()->NoReturn:
@@ -50,15 +51,17 @@ def zapret_install()->NoReturn:
     ZDIR = "/opt/zapret"
     ZCONFIG = DOTFILES_PATH + "/openwrt" 
     
-    cmd.append([DOTFILES_PATH + "../zapret/install_prereq.sh"])
-    cmd.append([DOTFILES_PATH + "../zapret/install_bin.sh"])
-    cmd.append(["cp", ZCONFIG + "/config", ZDIR]) 
-    cmd.append(["cp", ZCONFIG + "/host-auto.txt",
+    subprocess.run(["make"], cwd=DOTFILES_PATH + "/../zapret/")
+    cmd.append([DOTFILES_PATH + "/../zapret/install_prereq.sh"]) 
+    cmd.append([DOTFILES_PATH + "/../zapret/install_bin.sh"])
+    cmd.append([DOTFILES_PATH + "/../zapret/install_easy.sh"])
+    cmd.append(["sudo", "cp", ZCONFIG + "/config", ZDIR]) 
+    cmd.append(["sudo", "cp", ZCONFIG + "/host-auto.txt",
                 ZDIR + "/ipset/zapret-host-user.txt"]) 
     _run(cmd) 
 
 def dotfile_init()->NoReturn:
-    subprocess.run(["cp", "/wallpapers/wallpapers.png", "~/.wallpaper.png"], cwd=DOTFILES_PATH),   
+    subprocess.run(["cp", DOTFILES_PATH + "/wallpapers/wallpaper.png", "~/.wallpaper.png"]),   
 
     softlink_cmd =  ["ln", "-s"]
     for links in FROMTO:
@@ -73,16 +76,16 @@ def chadwm_patching()->NoReturn:
     dot_chadwm_dir = DOTCONF_PATH  + 'chadwm'
     chadwm_mod_dir = DOTFILES_PATH + '/dwm/chadwm'
     
-    modif_files = [
-        "config.def.h"
-        "bar.sh"
-        "run.sh"
+    modif_file = [
+        "config.def.h",
+        "bar.sh",
+        "run.sh",
     ]
 
     cmd = []
-    cmd.append(["sudo", "rm", chadwm_dir + "/chadwm/"  + modif_file[0]])
-    cmd.append(["sudo", "rm", chadwm_dir + "/scripts/" + modif_file[1]])
-    cmd.append(["sudo", "rm", chadwm_dir + "/scripts/" + modif_file[2]])
+    cmd.append(["sudo", "rm", dot_chadwm_dir + "/chadwm/"  + modif_file[0]])
+    cmd.append(["sudo", "rm", dot_chadwm_dir + "/scripts/" + modif_file[1]])
+    cmd.append(["sudo", "rm", dot_chadwm_dir + "/scripts/" + modif_file[2]])
     
     cmd.append(["cp", 
                 chadwm_mod_dir + "/"         + modif_file[0], 
@@ -102,13 +105,15 @@ def chadw_compile()->NoReturn:
     subprocess.run(["sudo", "make", "install"], cwd=chadwm_dir)
 
 def main():
-    keyboard_setup()
+    # TODO: add c-like getops
     install_pacman_packages()
+    keyboard_setup()
     git_clone_repos()
     install_aur()
     dotfile_init()
     chadwm_patching()
     chadw_compile()
+    zapret_install()
 
 if __name__ == "__main__":
     main()
