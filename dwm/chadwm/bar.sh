@@ -16,7 +16,7 @@ darkblue=#6080a0
 cpu() {
   cpu_val=$(grep -o "^[^ ]*" /proc/loadavg)
 
-  printf "^c$green^ ^b$black^  "
+  printf "^c$green^ ^b$black^   "
   printf "^c$green^$cpu_val%%"
 }
 
@@ -43,7 +43,7 @@ brightness() {
 }
 
 mem() {
-  printf "^c$blue^^b$black^  "
+  printf "^c$blue^^b$black^  "
   printf "^c$blue^ $(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)"
 }
 
@@ -55,7 +55,7 @@ wlan() {
 }
 
 showip() {
-    printf "^c$red^^b$black^  "
+    printf "^c$red^^b$black^ 󰈀 "
     printf "^c$red^$(ip addr show enp3s0 | grep -o 'inet\s.*/24' | awk '{print $2}' | cut -d'/' -f1)"
 }
 
