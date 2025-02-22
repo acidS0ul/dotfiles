@@ -106,9 +106,11 @@ def chadw_compile()->NoReturn:
     subprocess.run(["sudo", "make", "clean"], cwd=chadwm_dir)
     subprocess.run(["sudo", "make", "install"], cwd=chadwm_dir)
 
+def systemd_init()->NoReturn:
+    subprocess.run(["sudo", "systemctl", "enable", "dhcpcd.service"])
+    subprocess.run(["sudo", "systemctl", "restart", "zapret"])
+
 def main():
-    dotfile_init()
-    return
     # TODO: add c-like getops
     install_pacman_packages()
     keyboard_setup()
@@ -118,6 +120,7 @@ def main():
     chadwm_patching()
     chadw_compile()
     zapret_install()
+    systemd_init()
 
 if __name__ == "__main__":
     main()
