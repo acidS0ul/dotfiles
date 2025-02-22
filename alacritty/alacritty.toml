@@ -1,5 +1,5 @@
 [font]
-normal = { family = "firacode-nerd", style = "normal" }
+normal = { family = "FiraCode Nerd Font", style = "normal" }
 size = 13
 
 [colors.primary]
