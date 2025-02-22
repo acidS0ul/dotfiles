@@ -61,7 +61,9 @@ def zapret_install()->NoReturn:
     _run(cmd) 
 
 def dotfile_init()->NoReturn:
-    subprocess.run(["cp", DOTFILES_PATH + "/wallpapers/wallpaper.png", "~/.wallpaper.png"]),   
+
+    subprocess.run(["sudo", "cp", DOTFILES_PATH + "/wallpapers/wallpaper.png", 
+                    os.path.expanduser("~/.wallpaper.png")]),   
 
     softlink_cmd =  ["ln", "-s"]
     for links in FROMTO:
@@ -105,6 +107,8 @@ def chadw_compile()->NoReturn:
     subprocess.run(["sudo", "make", "install"], cwd=chadwm_dir)
 
 def main():
+    dotfile_init()
+    return
     # TODO: add c-like getops
     install_pacman_packages()
     keyboard_setup()
