@@ -4,9 +4,23 @@ from typing import NoReturn
 import subprocess
 import packages
 import os
+import getopt
+import sys 
 
 DOTFILES_PATH = os.path.expanduser("~/projects/dotfiles")
 DOTCONF_PATH  = os.path.expanduser("~/.config/")
+
+LONG_COMMAND  = [
+    "help",
+    "keyboard",
+    "git",
+    "aur",
+    "pacman",
+    "dotfiles",
+    "zapret",
+    "systemd",
+    "chadwm",
+]
 
 FROMTO =  [
     [DOTFILES_PATH + "/alacritty",                 ""],
@@ -110,18 +124,76 @@ def chadw_compile()->NoReturn:
 def systemd_init()->NoReturn:
     subprocess.run(["sudo", "systemctl", "enable", "dhcpcd.service"])
     subprocess.run(["sudo", "systemctl", "restart", "zapret"])
+def usage()->NoReturn:
+    print("-k\t--keyboard\t keyboard settings setup")
+    print("-g\t--git\t\t git repos clone")
+    print("-a\t--aur\t\t aur install")
+    print("-p\t--pacman\t pacman packages install")
+    print("-d\t--dotfiles\t dotfile init")
+    print("-z\t--zapret\t install and config zapret")
+    print("-s\t--systemd\t systemd init")
+    print("-c\t--chadwm\t chadwm install and patching")
+    print("-f\t--full\t\t full install")
+    print("-h\t--help\t\t this message")
 
-def main():
-    # TODO: add c-like getops
-    install_pacman_packages()
-    keyboard_setup()
-    git_clone_repos()
-    install_aur()
-    dotfile_init()
-    chadwm_patching()
-    chadw_compile()
-    zapret_install()
-    systemd_init()
+def get_short_commands_string():
+    str = ""
+    for cmd in LONG_COMMAND:
+        str = str + cmd[0]
+    return str
+
+def get_short(ind):
+    return "-" + LONG_COMMAND[ind][0] 
+
+def get_long(ind):
+    return "--" + LONG_COMMAND[ind]
+
+def main(): 
+    short_commands = get_short_commands_string()
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], short_commands, LONG_COMMAND)
+    except getopt.GetoptError as err:
+        print(err)
+        usage()
+        sys.exit(2)
+    
+    if len(sys.argv) == 1:
+        usage()
+        sys.exit(0)
+
+    for o, a in opts:
+        if o in (get_short(0), get_long(0)):
+            usage()
+            sys.exit(0) 
+        elif o in (get_short(1), get_long(1)):
+            keyboard_setup()
+        elif o in (get_short(2), get_long(2)):
+            git_clone_repos()
+        elif o in (get_short(3), get_long(3)):
+            install_aur()
+        elif o in (get_short(4), get_long(4)):
+            install_pacman_packages()
+        elif o in (get_short(5), get_long(5)):
+            dotfile_init()
+        elif o in (get_short(6), get_long(6)):
+            zapret_install()
+        elif o in (get_short(7), get_long(7)):
+            systemd_init()
+        elif o in (get_short(8), get_long(8)):
+            chadwm_patching()
+            chadw_compile()
+        elif o in ("-f", "--full"):
+            install_pacman_packages()
+            keyboard_setup()
+            git_clone_repos()
+            install_aur()
+            dotfile_init()
+            chadwm_patching()
+            chadw_compile()
+            zapret_install()
+            systemd_init()
+        else:
+            assert False, "unhandled option"
 
 if __name__ == "__main__":
     main()
