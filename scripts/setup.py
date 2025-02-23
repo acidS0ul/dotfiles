@@ -29,6 +29,7 @@ FROMTO =  [
     [DOTFILES_PATH + "/dwm/xinitrc",               "~/.xinitrc"],
     [DOTFILES_PATH + "../nvimrc",                  "~/.config/nvim"],
     [DOTFILES_PATH + "/tmux/tmux.conf",            "~/.tmux.conf"],
+    [DOTFILES_PATH + "/bashrc",                    "~/.bashrc"],
     
 ]
 
