@@ -14,6 +14,7 @@ pacman = [
     "noto-fonts-emoji",
     "openssh",
     "picom,",
+    "python-pynvim",
     "feh",
     "acpi",
     "rofi",
