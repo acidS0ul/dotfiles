@@ -64,16 +64,19 @@ def git_clone_repos()->NoReturn:
 
 def zapret_install()->NoReturn:
     cmd = []
-    ZDIR = "/opt/zapret"
-    ZCONFIG = DOTFILES_PATH + "/openwrt" 
-    
-    subprocess.run(["make"], cwd=DOTFILES_PATH + "/../zapret/")
-    cmd.append([DOTFILES_PATH + "/../zapret/install_prereq.sh"]) 
-    cmd.append([DOTFILES_PATH + "/../zapret/install_bin.sh"])
-    cmd.append([DOTFILES_PATH + "/../zapret/install_easy.sh"])
-    cmd.append(["sudo", "cp", ZCONFIG + "/config", ZDIR]) 
-    cmd.append(["sudo", "cp", ZCONFIG + "/host-auto.txt",
-                ZDIR + "/ipset/zapret-host-user.txt"]) 
+    git_cmd = ["git", "clone", "https://github.com/bol-van/zapret.git", "/tmp/zapret"]
+    subprocess.run(git_cmd)
+    git_cmd = ["git", "clone", "https://github.com/Snowy-Fluffy/zapret.cfgs.git", "/tmp/cfgs"]
+    subprocess.run(git_cmd)
+    subprocess.run(["sudo", "make"], cwd="/tmp/zapret/")
+
+    cmd.append(["/tmp/zapret/install_prereq.sh"]) 
+    cmd.append(["/tmp/zapret/install_bin.sh"]) 
+    cmd.append(["/tmp/zapret/install_easy.sh"])
+    cmd.append(["sudo", "cp", "/tmp/cfgs/configurations/general_ALT",  "/opt/zapret/config"])
+    cmd.append(["sudo", "cp", "/tmp/cfgs/lists/list-basic.txt",         "/opt/zapret/ipset/zapret-hosts-user.txt"])
+    cmd.append(["sudo", "cp", "/tmp/cfgs/lists/ipset-discord.txt",      "/opt/zapret/ipset/zapret-ip-user-ipban.txt"])
+    cmd.append(["sudo", "systemctl", "restart", "zapret"]) 
     _run(cmd) 
 
 def dotfile_init()->NoReturn:
