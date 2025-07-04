@@ -7,7 +7,7 @@ import os
 import getopt
 import sys 
 
-DOTFILES_PATH = os.path.expanduser("~/projects/dotfiles")
+DOTFILES_PATH = os.path.expanduser(os.path.dirname(os.path.dirname(__file__)))
 DOTCONF_PATH  = os.path.expanduser("~/.config/")
 
 LONG_COMMAND  = [
@@ -23,11 +23,10 @@ LONG_COMMAND  = [
 ]
 
 FROMTO =  [
-    [DOTFILES_PATH + "/alacritty",                 ""],
+    # [DOTFILES_PATH + "/alacritty",                 ""],
     [DOTFILES_PATH + "/redshift",                  ""],   
     [DOTFILES_PATH + "/scripts/getlocale.sh",      "~/.getlocale.sh"],   
-    [DOTFILES_PATH + "/dwm/xinitrc",               "~/.xinitrc"],
-    [DOTFILES_PATH + "../nvimrc",                  "~/.config/nvim"],
+    # [DOTFILES_PATH + "/dwm/xinitrc",               "~/.xinitrc"],
     [DOTFILES_PATH + "/tmux/tmux.conf",            "~/.tmux.conf"],
     [DOTFILES_PATH + "/bashrc",                    "~/.bashrc"],
     
@@ -79,16 +78,21 @@ def zapret_install()->NoReturn:
     cmd.append(["sudo", "systemctl", "restart", "zapret"]) 
     _run(cmd) 
 
+def neovim_init()->NoReturn:
+    cmd = []
+    cmd.append(["rm", "-rf", DOTCONF_PATH + "nvim"]) 
+    cmd.append(["git", "clone", "https://github.com/acidS0ul/nvimrc", 
+                DOTCONF_PATH + "nvim"])
+    _run(cmd) 
+
 def dotfile_init()->NoReturn:
-
-    subprocess.run(["sudo", "cp", DOTFILES_PATH + "/wallpapers/wallpaper.png", 
-                    os.path.expanduser("~/.wallpaper.png")]),   
-
     softlink_cmd =  ["ln", "-s"]
+    neovim_init()
     for links in FROMTO:
         if  links[1] == "":
             links[1] = DOTCONF_PATH
         else:
+            subprocess.run(["rm", os.path.expanduser(links[1])])
             links[1] = os.path.expanduser(links[1])
         subprocess.run(softlink_cmd + links)
 
