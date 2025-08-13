@@ -45,7 +45,9 @@ def install_system_packages() ->NoReturn:
     install_pacman_packages(packages.pacman_for_dwm)
 
 def install_aur()->NoReturn: 
-    subprocess.run(["makepkg", "-si"], cwd=packages.git_repos[0][1])
+    git_cmd = ["git", "clone", "https://aur.archlinux.org/yay.git", "/tmp/yay"]
+    subprocess.run(git_cmd)
+    subprocess.run(["makepkg", "-si"], cwd="/tmp/yay")
 
 # def install_aur_packages()->NoReturn:
 
