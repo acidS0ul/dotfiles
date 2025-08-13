@@ -128,6 +128,10 @@ def chadw_compile()->NoReturn:
     subprocess.run(["sudo", "make", "install"], cwd=chadwm_dir)
 
 def chadw_install()->NoReturn:
+    git_cmd = ["git", "clone", 
+               "https://github.com/siduck/chadwm",
+               "~/.config/chadwm"]
+    subprocess.run(git_cmd)
     chadwm_patching()
     chadw_compile()
 
@@ -157,7 +161,7 @@ COMMANDS = [
     ["system", "system pacman packages install for dwm", install_system_packages],
     ["dotfiles", "dotfile init", dotfile_init],
     ["zapret", "install and config zapret", zapret_install],
-    ["chadwm", "chadwm install and patching", install_system_packages],
+    ["chadwm", "chadwm install and patching", chadw_install],
     ["full", "full install (without dwm)", full_install],
     ["DWM", "full install (with dwm)", full_install_with_dwm],
 ]
