@@ -20,6 +20,7 @@ LONG_COMMAND  = [
     "zapret",
     "systemd",
     "chadwm",
+    "system"
 ]
 
 FROMTO =  [
@@ -43,9 +44,9 @@ def keyboard_setup()->NoReturn:
 
     subprocess.run(cmd)
 
-def install_pacman_packages() -> NoReturn:
+def install_pacman_packages(pkgs) -> NoReturn:
     cmd = ["sudo", "pacman", "-Suy"]
-    cmd = cmd + packages.pacman
+    cmd = cmd + pkgs
     subprocess.run(cmd)
 
 def install_aur()->NoReturn: 
@@ -137,6 +138,7 @@ def usage()->NoReturn:
     print("-g\t--git\t\t git repos clone")
     print("-a\t--aur\t\t aur install")
     print("-p\t--pacman\t pacman packages install")
+    print("-s\t--system\t system pacman packages install for dwm")
     print("-d\t--dotfiles\t dotfile init")
     print("-z\t--zapret\t install and config zapret")
     print("-s\t--systemd\t systemd init")
@@ -180,7 +182,7 @@ def main():
         elif o in (get_short(3), get_long(3)):
             install_aur()
         elif o in (get_short(4), get_long(4)):
-            install_pacman_packages()
+            install_pacman_packages(packages.pacman_basic)
         elif o in (get_short(5), get_long(5)):
             dotfile_init()
         elif o in (get_short(6), get_long(6)):
@@ -190,6 +192,8 @@ def main():
         elif o in (get_short(8), get_long(8)):
             chadwm_patching()
             chadw_compile()
+        elif o in (get_short(9), get_long(9)):
+            install_pacman_packages(packages.pacman_for_dwm)
         elif o in ("-f", "--full"):
             install_pacman_packages()
             keyboard_setup()
