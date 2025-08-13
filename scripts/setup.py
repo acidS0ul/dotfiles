@@ -10,18 +10,6 @@ import sys
 DOTFILES_PATH = os.path.expanduser(os.path.dirname(os.path.dirname(__file__)))
 DOTCONF_PATH  = os.path.expanduser("~/.config/")
 
-LONG_COMMAND  = [
-    "help",
-    "keyboard",
-    "git",
-    "aur",
-    "pacman",
-    "dotfiles",
-    "zapret",
-    "systemd",
-    "chadwm",
-    "system"
-]
 
 FROMTO =  [
     # [DOTFILES_PATH + "/alacritty",                 ""],
@@ -44,10 +32,17 @@ def keyboard_setup()->NoReturn:
 
     subprocess.run(cmd)
 
+
 def install_pacman_packages(pkgs) -> NoReturn:
     cmd = ["sudo", "pacman", "-Suy"]
     cmd = cmd + pkgs
     subprocess.run(cmd)
+
+def install_basic_packages() ->NoReturn:
+    install_pacman_packages(packages.pacman_basic)
+
+def install_system_packages() ->NoReturn:
+    install_pacman_packages(packages.pacman_for_dwm)
 
 def install_aur()->NoReturn: 
     subprocess.run(["makepkg", "-si"], cwd=packages.git_repos[0][1])
@@ -130,82 +125,80 @@ def chadw_compile()->NoReturn:
     subprocess.run(["sudo", "make", "clean"], cwd=chadwm_dir)
     subprocess.run(["sudo", "make", "install"], cwd=chadwm_dir)
 
-def systemd_init()->NoReturn:
-    subprocess.run(["sudo", "systemctl", "enable", "dhcpcd.service"])
-    subprocess.run(["sudo", "systemctl", "restart", "zapret"])
-def usage()->NoReturn:
-    print("-k\t--keyboard\t keyboard settings setup")
-    print("-g\t--git\t\t git repos clone")
-    print("-a\t--aur\t\t aur install")
-    print("-p\t--pacman\t pacman packages install")
-    print("-s\t--system\t system pacman packages install for dwm")
-    print("-d\t--dotfiles\t dotfile init")
-    print("-z\t--zapret\t install and config zapret")
-    print("-s\t--systemd\t systemd init")
-    print("-c\t--chadwm\t chadwm install and patching")
-    print("-f\t--full\t\t full install")
-    print("-h\t--help\t\t this message")
+def chadw_install()->NoReturn:
+    chadwm_patching()
+    chadw_compile()
+
+def full_install()->NoReturn:
+    install_basic_packages()
+    keyboard_setup()
+    git_clone_repos()
+    install_aur()
+    dotfile_init()
+    zapret_install()
+
+def full_install_with_dwm()->NoReturn:
+    install_system_packages()
+    full_install()
+    chadw_install()
+
+def print_help()->NoReturn:
+    for cmd in COMMANDS:
+        print(f"-{cmd[0][0]}/--{cmd[0]}\t\t{cmd[1]}")
+
+COMMANDS = [
+    ["help", "this message", print_help],
+    ["keyboard", "keyboard settings setup", keyboard_setup],
+    ["git", "git repos clone", git_clone_repos],
+    ["aur", "aur install", install_aur],
+    ["pacman", "pacman packages install", install_basic_packages],
+    ["system", "system pacman packages install for dwm", install_system_packages],
+    ["dotfiles", "dotfile init", dotfile_init],
+    ["zapret", "install and config zapret", zapret_install],
+    ["chadwm", "chadwm install and patching", install_system_packages],
+    ["full", "full install (without dwm)", full_install],
+    ["DWM", "full install (with dwm)", full_install_with_dwm],
+]
+
+def usage(code)->NoReturn:
+    print_help()
+    sys.exit(code)
 
 def get_short_commands_string():
     str = ""
-    for cmd in LONG_COMMAND:
+    for cmd in COMMANDS:
+        str = str + cmd[0][0]
+    return str
+
+def get_long_commands_string():
+    str = ""
+    for cmd in COMMANDS:
         str = str + cmd[0]
     return str
 
-def get_short(ind):
-    return "-" + LONG_COMMAND[ind][0] 
-
-def get_long(ind):
-    return "--" + LONG_COMMAND[ind]
+def processing_commands(opt):
+    for cmd in COMMANDS:
+        # print(f"{o} / -{cmd[0][0]} / --{cmd[0]}")
+        if opt in ("-"+cmd[0][0], "--"+cmd[0]):
+            cmd[2]()
+            return
+    assert False, "unhandled option"
+    return
 
 def main(): 
     short_commands = get_short_commands_string()
+    long_commands = get_long_commands_string()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], short_commands, LONG_COMMAND)
+        opts, args = getopt.getopt(sys.argv[1:], short_commands, long_commands)
     except getopt.GetoptError as err:
         print(err)
-        usage()
-        sys.exit(2)
+        usage(2)
     
     if len(sys.argv) == 1:
-        usage()
-        sys.exit(0)
+        usage(0)
 
     for o, a in opts:
-        if o in (get_short(0), get_long(0)):
-            usage()
-            sys.exit(0) 
-        elif o in (get_short(1), get_long(1)):
-            keyboard_setup()
-        elif o in (get_short(2), get_long(2)):
-            git_clone_repos()
-        elif o in (get_short(3), get_long(3)):
-            install_aur()
-        elif o in (get_short(4), get_long(4)):
-            install_pacman_packages(packages.pacman_basic)
-        elif o in (get_short(5), get_long(5)):
-            dotfile_init()
-        elif o in (get_short(6), get_long(6)):
-            zapret_install()
-        elif o in (get_short(7), get_long(7)):
-            systemd_init()
-        elif o in (get_short(8), get_long(8)):
-            chadwm_patching()
-            chadw_compile()
-        elif o in (get_short(9), get_long(9)):
-            install_pacman_packages(packages.pacman_for_dwm)
-        elif o in ("-f", "--full"):
-            install_pacman_packages()
-            keyboard_setup()
-            git_clone_repos()
-            install_aur()
-            dotfile_init()
-            chadwm_patching()
-            chadw_compile()
-            zapret_install()
-            systemd_init()
-        else:
-            assert False, "unhandled option"
+        processing_commands(o)
 
 if __name__ == "__main__":
     main()
