@@ -1,0 +1,57 @@
+# The following lines were added by compinstall
+
+zstyle ':completion:*' verbose true
+zstyle :compinstall filename '/home/acidsoul/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.zsh_history       
+HISTSIZE=10000                
+SAVEHIST=10000                
+
+setopt appendhistory          
+setopt share_history          
+setopt inc_append_history     
+setopt extended_history       
+setopt hist_expire_dups_first 
+setopt hist_ignore_dups       
+setopt hist_ignore_space      
+setopt hist_verify            
+
+bindkey -v
+# End of lines configured by zsh-newuser-install
+zstyle ':completion:*' menu select
+
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+[[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"   up-line-or-beginning-search
+[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" down-line-or-beginning-search
+
+# Добавьте в ~/.zshrc
+autoload -U colors && colors
+autoload -Uz vcs_info
+
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' formats ' [%b%u%c]'
+zstyle ':vcs_info:*' unstagedstr ' *'
+zstyle ':vcs_info:*' stagedstr ' +'
+
+source ~/.git-prompt.sh
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWUPSTREAM="auto"
+export GIT_PS1_SHOWCOLORHINTS=1
+
+setopt prompt_subst 
+
+PROMPT=' %F{green}%n@%m%f %F{blue}%~%f $(__git_ps1 " [%s]")%f %# '
+#PROMPT='%F{green}%n@%m%f %F{blue}%~%f%F{red}$(__git_ps1 " [%s]")%f %# '
+
+
+
