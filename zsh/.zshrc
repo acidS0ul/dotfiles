@@ -30,6 +30,8 @@ zle -N down-line-or-beginning-search
 
 [[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"   up-line-or-beginning-search
 [[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" down-line-or-beginning-search
+bindkey "^k" history-beginning-search-backward
+bindkey "^j" history-beginning-search-forward
 
 # Добавьте в ~/.zshrc
 autoload -U colors && colors
