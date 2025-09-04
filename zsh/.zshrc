@@ -23,6 +23,9 @@ setopt hist_verify
 bindkey -v
 # End of lines configured by zsh-newuser-install
 zstyle ':completion:*' menu select
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
 
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
@@ -55,5 +58,5 @@ setopt prompt_subst
 PROMPT=' %F{green}%n@%m%f %F{blue}%~%f $(__git_ps1 " [%s]")%f %# '
 #PROMPT='%F{green}%n@%m%f %F{blue}%~%f%F{red}$(__git_ps1 " [%s]")%f %# '
 
-
-
+# Load zsh-syntax-highlighting; should be last.
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
