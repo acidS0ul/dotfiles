@@ -16,19 +16,13 @@
     },
   },
   {
-    "context": "Editor && vim_mode == insert",
-    "bindings": {
-      // "j k": "vim::NormalBefore"
-    },
-  },
-  {
     "context": "Editor && vim_mode == normal",
     "bindings": {
       "space g c": "git::Commit",
       "tab": "tab_switcher::Toggle",
       "space m p": "markdown::OpenPreview",
-      "] g": "editor::GoToHunk",
-      "[ g": "editor::GoToPreviousHunk",
+      "space g ]": "editor::GoToHunk",
+      "space g [": "editor::GoToPreviousHunk",
       // "j k": "vim::NormalBefore"
     },
   },
@@ -56,7 +50,7 @@
   },
   {
     "bindings": {
-      "space e": "project_panel::Toggle"
-    }
-  }
+      "space e": "project_panel::Toggle",
+    },
+  },
 ]
