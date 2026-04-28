@@ -8,9 +8,14 @@ packages:
 dotfiles:
 	stow --dotfiles .
 
-install:
+install: trusttunnel zed opencode
+
+trusttunnel:
 	curl -fsSL https://raw.githubusercontent.com/TrustTunnel/TrustTunnelClient/refs/heads/master/scripts/install.sh | sh -s -
+zed:
 	curl -f https://zed.dev/install.sh | sh
+opencode:
+	curl -fsSL https://opencode.ai/install | bash
 
 aur:
 	git clone https://aur.archlinux.org/yay.git /tmp/yay
