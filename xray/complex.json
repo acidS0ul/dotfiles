@@ -1,0 +1,334 @@
+{
+  "log": {
+    "dnsLog": false,
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "none"
+  "dns": {
+    "servers": [
+      "https+local://8.8.4.4/dns-query",
+      "https+local://8.8.8.8/dns-query",
+      "https+local://1.1.1.1/dns-query",
+      "localhost"
+    ],
+    "queryStrategy": "UseIPv4"
+  },
+  "inbounds": [
+	{
+      "tag": "vsRAWrtyVISION",
+      "port": 443,
+      "listen": "0.0.0.0",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "flow": "xtls-rprx-vision",
+            "id": "!!! PASTE HERE ID FROM xray uuid !!!"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": "3333",
+            "xver": 2
+          }
+        ]
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      },
+      "streamSettings": {
+        "network": "raw",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "xver": 2,
+          "target": "/dev/shm/nginx.sock",
+          "spiderX": "/",
+          "shortIds": [
+            "!!! PASTE SHORT ID !!!"
+          ],
+          "privateKey": "!!! PASTE PRIVATE KEY !!!",
+          "serverNames": [
+            "!!! PASTE DOMAIN !!!"
+          ],
+          "limitFallbackUpload": {
+            "afterBytes": 0,
+            "bytesPerSec": 65536,
+            "burstBytesPerSec": 0
+          },
+          "limitFallbackDownload": {
+            "afterBytes": 5242880,
+            "bytesPerSec": 262144,
+            "burstBytesPerSec": 2097152
+          }
+        }
+      }
+    },
+	{
+      "tag": "vsXHTTPrty",
+      "port": 3333,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "!!! PASTE HERE ID FROM xray uuid !!!"
+          }
+        ],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "stream-one",
+		  "path": "/s63zei"
+        },
+        "security": "none",
+        "sockopt": {
+          "acceptProxyProtocol": true
+        }
+      }
+    },
+    {
+      "tag": "vsRAWtlsVISION",
+      "port": 8443,
+      "listen": "0.0.0.0",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+			"flow": "xtls-rprx-vision",
+            "id": "!!! PASTE HERE ID FROM xray uuid !!!"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "path": "/s63zei22",
+            "dest": "@vless-ws",
+            "xver": 2
+          },
+          {
+            "path": "/ssws",
+            "dest": "4001"
+          },
+          {
+		    "alpn": "h2",
+            "dest": "/dev/shm/nginx_h2.sock",
+            "xver": 2
+          },
+          {
+            "dest": "/dev/shm/nginxTLS.sock",
+            "xver": 2
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "raw",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/var/lib/xray/cert/fullchain.pem",
+              "keyFile": "/var/lib/xray/cert/privkey.pem"
+            }
+          ],
+          "minVersion": "1.2",
+          "cipherSuites": "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", 
+          "alpn": [
+            "h2", "http/1.1"
+          ]
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      }
+    },
+    {
+      "tag": "vsXHTTPtls",
+      "port": 8400,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "!!! PASTE HERE ID FROM xray uuid !!!"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "auto",
+          "path": "/s63zei"
+        },
+        "security": "none",
+        "sockopt": {
+          "acceptProxyProtocol": false
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      }
+    },
+    {
+      "tag": "vsGRPCtls",
+      "port": 8411,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "!!! PASTE HERE ID FROM xray uuid !!!"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "grpc",
+        "grpcSettings": {
+          "serviceName": "s63zei11"
+        },
+        "security": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      }
+    },
+    {
+      "listen": "@vless-ws",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "!!! PASTE HERE ID FROM xray uuid !!!"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/s63zei22"
+        },
+        "security": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      }
+    },
+	{
+      "tag": "socks5",
+      "port": 10443,
+      "listen": "0.0.0.0",
+      "protocol": "mixed",
+      "settings": {
+        "ip": "0.0.0.0",
+        "udp": true,
+        "auth": "password",
+        "accounts": [
+          {
+	    "user": "!!! SOCKS USER",
+            "pass": "!!! PASSWORD FOR SOCKS USER"
+            
+          }
+        ]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "ForceIPv4"
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    },
+	{
+	  "tag": "warp",
+	  "protocol": "socks",
+	  "settings": {
+		"servers": [
+		  {
+			"address": "127.0.0.1",
+			"port": 40000
+		  }
+		]
+	  }
+	}
+  ],
+  "routing": {
+    "rules": [
+      {
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "block"
+      },
+	  {
+        "port": "25",
+        "outboundTag": "block"
+      },
+      {
+        "protocol": [
+          "bittorrent"
+        ],
+        "outboundTag": "block"
+      },
+      {
+        "domain": [
+          "geosite:category-ads",
+          "geosite:win-spy",
+          "geosite:private"
+        ],
+        "outboundTag": "block"
+      },
+	{
+	  "outboundTag": "warp",
+	  "domain": ["ifconfig.me","checkip.amazonaws.com","pify.org","2ip.io","habr.com","geosite:category-ip-geo-detect","geosite:google-gemini","geosite:canva","geosite:openai","geosite:whatsapp","geosite:category-ru"]
+	}
+    ],
+    "domainStrategy": "IPIfNonMatch"
+  }
+}
+
