@@ -17,3 +17,6 @@ github-cli
 libnetfilter_queue
 unzip
 stow
+protontricks
+kdiff3
+xclip
