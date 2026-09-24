@@ -20,3 +20,8 @@ stow
 protontricks
 kdiff3
 xclip
+github-cli
+neovim
+sing-box
+steam
+tcpdump
