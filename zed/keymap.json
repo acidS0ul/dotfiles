@@ -1,56 +1,76 @@
-// Zed keymap
-//
-// For information on binding keys, see the Zed
-// documentation: https://zed.dev/docs/key-bindings
-//
-// To see the default key bindings run `zed: open default keymap`
-// from the command palette.
 [
   {
-    "context": "Workspace",
+    "context": "VimControl && !menu",
     "bindings": {
-      "space f f": "file_finder::Toggle",
-      "space f g": "workspace::NewSearch",
+      "up": null,
+      "down": null,
+      "left": null,
+      "right": null
+    }
+  },
+  {
+    "context": "vim_mode == normal && !menu",
+    "bindings": {
+      "tab": [
+        "workspace::SendKeystrokes",
+        "g t"
+      ],
+      "shift-tab": [
+        "workspace::SendKeystrokes",
+        "g T"
+      ],
 
-      // "shift shift": "file_finder::Toggle"
-    },
+      "space tab": [
+        "workspace::SendKeystrokes",
+        ":tabnew"
+      ],
+
+      "space y y": [
+        "workspace::SendKeystrokes",
+        "\"+y y"
+      ],
+      "space y w": [
+        "workspace::SendKeystrokes",
+        "\"+y w"
+      ],
+      "space y i w": [
+        "workspace::SendKeystrokes",
+        "\"+y i w"
+      ],
+
+      "space f f": "file_finder::Toggle",
+      "space f g": "pane::DeploySearch",
+      "space f t": "outline::Toggle",
+      "space f b": "tab_switcher::ToggleAll",
+
+      "space f o": "file_finder::Toggle",
+
+      "space g ]": [
+        "workspace::SendKeystrokes",
+        "] c"
+      ],
+      "space g [": [
+        "workspace::SendKeystrokes",
+        "[ c"
+      ],
+
+      "space g c": "git::Commit"
+    }
   },
   {
-    "context": "Editor && vim_mode == normal",
+    "context": "vim_mode == visual && !menu",
     "bindings": {
-      "space g c": "git::Commit",
-      "tab": "tab_switcher::Toggle",
-      "space m p": "markdown::OpenPreview",
-      "space g ]": "editor::GoToHunk",
-      "space g [": "editor::GoToPreviousHunk",
-      // "j k": "vim::NormalBefore"
-    },
+      "space y": [
+        "workspace::SendKeystrokes",
+        "\"+y"
+      ]
+    }
   },
   {
-    "context": "Dock",
+    "context": "Editor && !menu",
     "bindings": {
-      "tab": "tab_switcher::Toggle",
-      "ctrl-w h": "workspace::ActivatePaneLeft",
-      "ctrl-w l": "workspace::ActivatePaneRight",
-      "ctrl-w k": "workspace::ActivatePaneUp",
-      "ctrl-w j": "workspace::ActivatePaneDown",
-    },
-  },
-  {
-    "context": "GitPanel",
-    "bindings": {
-      "space g c": "git::Commit",
-    },
-  },
-  {
-    "context": "GitPanel",
-    "unbind": {
-      "ctrl-enter": "git::Commit",
-    },
-  },
-  {
-    "bindings": {
-      "space e": "project_panel::Toggle",
-    },
-  },
+      "ctrl-tab": "pane::ActivateNextItem",
+      "ctrl-shift-tab": "pane::ActivatePreviousItem"
+    }
+  }
 ]
